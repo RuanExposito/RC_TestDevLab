@@ -1,6 +1,6 @@
 Given('I am in home page') do
-  sleep(3)
-  @driver.find_element(:xpath, "//nav[@class='menu-bar w-msg']/div[1]/a[2]") #Locate TestDevLab icon on home
+  #Locate TestDevLab icon on home
+  @wait.until{@driver.find_element(:xpath, "//nav[@class='menu-bar w-msg']/div[1]/a[2]")}
 end
 
 Given('All the subsections are not visible') do

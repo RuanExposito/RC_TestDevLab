@@ -1,7 +1,8 @@
 class Homepage
 
-  def initialize driver
+  def initialize driver,wait
     @driver = driver
+    @wait = wait
   end
 
 
@@ -84,14 +85,27 @@ class Homepage
     count_displayed = 0
 
     for menu_item in 0..menu_size-1
+      if menu_item >= 1
+        @wait.until {!(@driver.find_elements(:class,parent)[menu_item-1].find_element(:class, "sub-menu-box").displayed?)}
+      end
+
       @driver.find_elements(:class, parent)[menu_item].click
-      sleep(1)
+      if @driver.find_elements(:class,parent)[menu_item].find_elements(:class,child).size > 0
+        @wait.until {@driver.find_elements(:class,parent)[menu_item].find_elements(:class,child)[0].displayed?}
+      end
+
       count_options = count_child_options(parent, menu_item, child)
-      sleep(1)
       count_displayed = count_displayed_child(parent,child)
+
       if count_options != count_displayed
         raise "Not all the options are displayed"
       end
+
+      #xpath method
+      @driver.find_element(:xpath, "//*[@id='root']/div/div[2]/nav/div[1]/div[2]/div[1]").click
+
+      #class method
+      #@driver.find_element(:class, "custom-drop-down").click
     end
 
   end
